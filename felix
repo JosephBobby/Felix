@@ -1,0 +1,280 @@
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <string>
+#include <cassert>
+
+
+using namespace std;
+
+
+bool hasDuplicates( const string array[ ],  int size );
+//Returns true when an element in the array is found more than once.
+
+int countAllDigits(const string array[ ], int size);
+//Returns the total number of digit characters (that is, the characters '0' - '9') found in all the elements of the passed array argument.
+
+bool isInDecreasingOrder( const string array[ ], int size );
+//If every value in the array is smaller than the one that precedes it, return true.
+
+int shiftRight( string array[ ], int size, int amount, string placeholder );
+//Adjust the items found in the array, shifting each value to the right by amount parameter, filling the resulting first amount elements of the array with the placeholder parameter and returning the number of times the placeholder value was used after all the shifting has been performed.
+
+int  find( const string array[ ], int size, string match );
+//Return the smallest index of the element whose value equals the match parameter in the array.
+
+int  replaceAllCharacters( string array[ ], int size, char findLetter, char replaceLetter );
+//This function should replace every occurrence of the findLetter value with the replaceLetter value found in all the array elements of the passed array argument.
+
+int main() {
+    
+    string folks[8] = {"samwell", "jon", "margaery", "daenerys", "tyrion", "sansa6", "howard22", "jon"};
+    string empty[1] = { "" };
+    string order[6] = { "lmao", "apple", "Zorcon", "Zorco", "Pineapple", ":)" };
+    string people[5] = { "samwell", "jon", "margaery", "daenerys", "tyrion" };
+    
+    
+    
+   
+    
+    
+    
+    assert(!(hasDuplicates(folks, 5)));
+    assert(!(hasDuplicates(folks, -1)));
+    assert(!(hasDuplicates(folks, 0)));
+    assert((hasDuplicates(folks, 8)));
+    assert(!(hasDuplicates(people, 5)));
+    assert(!(hasDuplicates(empty, 1)));
+
+    assert(find(folks, 5, "foo") == -1);
+    assert(find(folks, 8, "jon") == 1);
+    assert(find(folks, -500, "foo") == -1);
+    assert(find(empty, 0, "") == -1); //What if im trying to find the empty string
+    assert(find(empty, 1, "") == 0);
+    
+    assert((shiftRight(folks, 6, 0, "foo") == 0));
+    assert((shiftRight(folks, 0, 3, "foo") == 0));
+    assert((shiftRight(folks, 6, -1, "foo") == -1));
+    assert((shiftRight(folks, -1, 3, "foo") == -1));
+    
+   
+    assert(replaceAllCharacters(people, 5, 'a', '_') == 4);
+    
+    
+   
+    assert((countAllDigits(people, 5) == 0));
+    assert((countAllDigits(empty,1) == 0));
+  
+    assert((countAllDigits(folks, 0) == -1));
+    assert((countAllDigits(folks, -1) == -1));
+    assert((countAllDigits(folks, 4) == 0));
+    assert((countAllDigits(folks, 8) == 5));
+    
+    assert(!(isInDecreasingOrder(people, 5)));
+    assert((isInDecreasingOrder(empty, 1)));
+    assert((isInDecreasingOrder(people, 0)));
+    assert((isInDecreasingOrder(order, 6)));
+    assert(!(isInDecreasingOrder(order, -1)));
+   
+    return 0;
+}
+
+
+
+//Returns true when an element in the array is found more than once; false otherwise or if there are no elements because size is less than or equal to zero.
+bool hasDuplicates( const string array[ ],  int size )
+{
+    
+    if (size <= 0)
+        {return false;
+
+        }
+
+    // These ensuing loops increment index to a value greater than one if an element is matched more than once (more than just to itself). This will cause the function to return true.
+    for (int i = 0; i < size; i++)
+    {  int index = 0;
+    for (int j = 0; j < size; j++)
+    {
+        if (array[i] == array[j])
+    { index++;
+        
+    }
+    }
+        if (index > 1)
+        {return true;
+            
+        }
+       
+    }
+     return false;
+    }
+
+
+//Returns the total number of digit characters (that is, the characters '0' - '9') found in all the elements of the passed array argument.  Return -1 if there are no elements because size is less than or equal to zero.
+
+int  countAllDigits(const string array[], int size) {
+   
+    if (size <= 0)
+    {
+        return (-1);
+    }
+    
+    int index = 0; //counter variable
+    
+    for (int i = 0; i < size; i++) {
+        
+        string s = array[i];
+        // The if statement in this for loops checks for the digit characters, and increments the index variable for how many it finds.
+        for (int j = 0; j < s.size(); j++) {
+            if (s[j] >= '0' && s[j] <= '9') {
+                index++;
+            }
+        }
+    }
+    
+    return index;
+}
+
+    
+//If every value in the array is smaller than the one that precedes it, return true; otherwise return false or if size is less than zero return false.
+
+bool isInDecreasingOrder(const string array[], int size) {
+   
+    if (size < 0)
+    {return false;
+        
+    }
+    
+    if (size == 0 || size == 1)
+    
+    {return true;
+        
+    }
+    //This for loop checks the array to ensure that every value in the array is smaller than the one that precedes it, otherwise returning false.
+    for (int i = 0; i < size-1; i++) {
+       
+        string first = array[i];
+       
+        string second = array[i + 1];
+        
+        if (!(first.compare(second) > 0)) {
+            return false;
+        }
+    }
+    return true;
+    
+}
+
+
+//Adjust the items found in the array, shifting each value to the right by amount parameter, filling the resulting first amount elements of the array with the placeholder parameter and returning the number of times the placeholder value was used after all the shifting has been performed or -1 if the size or amount is less than zero.
+int  shiftRight( string array[ ], int size, int amount, string placeholder )
+{
+    
+    if (size < 0)
+    {return -1;
+        
+    }
+    
+    
+    // If the amount needing to be shifted is greater than or equal to the size, we use this for loop, which simply makes all values of the array equal to the placeholder.
+    if (amount >= size)
+    {  { for (int i = 0; i < size; i++)
+        { array[i]  = placeholder;
+            }
+    } }
+    
+    
+    int j = 0;
+    
+    // If the amount needing to be shifted is less than the size, we use these two for loops. The first for loop does the "shifting". 
+        if (amount < size) {
+      for (int i = amount; i < size; i ++)
+          { {array[i] = array[j];
+              j++;
+          }
+        } }
+    
+    // This for loop then replaces the first amount elements with the placeholder (now we don't need their values, since we have already done the shifting).
+    if (amount < size) {
+    { for (int i = 0; i < amount; i++)
+    { array[i]  = placeholder;
+            }
+    }
+        
+    }
+    
+    /* This checked the function by printing the array's values to the screen
+    for (int i = 0; i < size; i++)
+    { cout << array[i] << endl;
+        
+    }
+    
+    */
+    
+    
+    if ( amount < size)
+    { return amount;
+        
+    }
+   
+    return size;
+}
+
+
+
+//Return the smallest index of the element whose value equals the match parameter in the array.  Return -1 if the item was not found or there are no elements because size is less than zero.
+int  find( const string array[ ], int size, string match )
+{
+    
+    if (size < 0)
+    {return -1;
+        
+    }
+    
+    // When the string in the array matches the item we want to check for, this for loop then returns the index of the first string in the array that matched.
+    for (int i = 0; i < size; i++)
+    {
+        if ( array[i] == match)
+        { return i;
+            
+        }
+    }
+    
+    return -1; 
+}
+
+
+
+
+//This function should replace every occurrence of the findLetter value with the replaceLetter value found in all the array elements of the passed array argument. Return the number of letters that were replaced or -1 if the array has no elements because size is less than or equal to zero.
+int  replaceAllCharacters( string array[ ], int size, char findLetter, char replaceLetter )
+{
+    // An array with a size less than or equal to zero is to return false.
+    if (size <= 0)
+    {return -1;
+        
+    }
+    
+    int index = 0;
+    for (int i = 0; i < size; i++)
+    { string first = array[i];
+        for (int j=0; j < first.size(); j++)
+        { if (first[j] == findLetter)
+        { first[j] = replaceLetter;
+            index++;
+            }
+            array[i] = first;
+              }
+    }
+    
+    
+      /* This checked the function by printing the array's values to the screen
+    for (int x=0; x< size; x++)
+    { cout << array[x] << endl;
+        
+    }
+    */
+    
+    
+    return (index);
+}
